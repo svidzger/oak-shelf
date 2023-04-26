@@ -6,7 +6,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    secondaryContainer: 'transparent', // disable the little highlighting oval on tab press
+    secondaryContainer: '#CCD5AE',
   },
 };
 
