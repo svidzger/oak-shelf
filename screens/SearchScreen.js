@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, FlatList, Image } from 'react-native';
-import { Searchbar, Text } from 'react-native-paper';
+import { Button, Searchbar, Text } from 'react-native-paper';
 import { API_URL, API_KEY } from '@env';
 import axios from 'axios';
-import BookDialog from './BookDialog';
+import BookDialog from '../components/BookDialog';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SearchScreen() {
   const [keyword, setKeyword] = useState('');
   const [result, setResult] = useState([]);
+  const navigation = useNavigation();
 
   const findBooks = () => {
     axios
@@ -26,7 +28,6 @@ export default function SearchScreen() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FAEDCD',
       }}
     >
       <View
@@ -35,12 +36,11 @@ export default function SearchScreen() {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#D4A373',
           width: '100%',
         }}
       >
         <Searchbar
-          style={{ width: 300, backgroundColor: '#CCD5AE', marginTop: 40 }}
+          style={{ width: 300, marginTop: 40 }}
           placeholder='Search'
           onChangeText={(text) => setKeyword(text)}
           value={keyword}
@@ -49,6 +49,7 @@ export default function SearchScreen() {
         />
       </View>
       <View style={{ flex: 5 }}>
+        <Button onPress={() => navigation.goBack()}>User Profile</Button>
         <FlatList
           data={result}
           renderItem={({ item }) => (
@@ -60,7 +61,6 @@ export default function SearchScreen() {
                 flexDirection: 'row',
                 margin: 20,
                 height: 100,
-                backgroundColor: '#FAEDCD',
               }}
             >
               {/* Fix conditional rendering when thumbnail picture is not avaible */}

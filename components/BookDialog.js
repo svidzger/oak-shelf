@@ -32,16 +32,11 @@ const BookDialog = (props) => {
       >
         <Text style={{ fontSize: 18 }}>{props.item.volumeInfo.title}</Text>
         <Text style={{ fontSize: 14 }}>
-          {' '}
           Author: {props.item.volumeInfo.authors}
         </Text>
       </TouchableOpacity>
       <Portal>
-        <Dialog
-          style={{ backgroundColor: '#FAEDCD' }}
-          visible={visible}
-          onDismiss={hideDialog}
-        >
+        <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>{props.item.volumeInfo.title}</Dialog.Title>
           <View style={{ height: 300 }}>
             <Dialog.ScrollArea>
