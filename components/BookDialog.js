@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { Button, Dialog, Portal, Text, IconButton } from 'react-native-paper';
+import { auth, database } from '../firebase/firebase';
+import { set, push, remove, ref, onValue } from 'firebase/database';
 
 const BookDialog = (props) => {
   const [visible, setVisible] = React.useState(false);
@@ -13,7 +15,14 @@ const BookDialog = (props) => {
   const hideDialog = () => setVisible(false);
 
   const wantToRead = () => {
-    console.log('Want to read that book');
+    if (auth.currentUser) {
+      push(ref(database, 'books/'), {
+        username: auth.currentUser.displayName,
+        book: props.item,
+      });
+    } else {
+      Alert.alert('Error');
+    }
   };
 
   return (
@@ -40,7 +49,7 @@ const BookDialog = (props) => {
           <Dialog.Title>{props.item.volumeInfo.title}</Dialog.Title>
           <View style={{ height: 300 }}>
             <Dialog.ScrollArea>
-              <Text variant='bodyMedium'>Book description:</Text>
+              <Text variant="bodyMedium">Book description:</Text>
               <ScrollView
                 pagingEnabled={true}
                 bounces

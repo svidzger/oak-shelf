@@ -13,6 +13,12 @@ export default function SearchScreen() {
 
   const findBooks = () => {
     axios
+      ///////////////////////////////////
+      // MAKE .ENV FILE WORK AIGAIN!!!!//
+      //////////////////////////////////
+      // .get(
+      //   `https://www.googleapis.com/books/v1/volumes?q=${keyword}:keyes&key=AIzaSyBiyEgG3cyVKmDhjK3Tlt7mJDho4b2wap4`
+      // )
       .get(`${API_URL}${keyword}:keyes&key=${API_KEY}`)
       .then((res) => {
         setResult(res.data.items);
@@ -41,7 +47,7 @@ export default function SearchScreen() {
       >
         <Searchbar
           style={{ width: 300, marginTop: 40 }}
-          placeholder='Search'
+          placeholder="Search"
           onChangeText={(text) => setKeyword(text)}
           value={keyword}
           onIconPress={findBooks}

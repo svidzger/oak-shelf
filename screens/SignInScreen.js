@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
 
-  const onSignInPressed = () => {
-    console.log('Sign in pressed');
-
-    //validate in db
-    navigation.navigate('User');
-  };
-
   const onRegisterPressed = () => {
     navigation.navigate('SignUp');
+  };
+  const auth = getAuth();
+  const userLogin = () => {
+    if (email === '' && password === '') {
+      Alert.alert('Enter details to signin!');
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+          console.log(res);
+          console.log('User logged-in successfully!');
+          setEmail('');
+          setPassword('');
+          navigation.navigate('User');
+        })
+        .catch((error) => console.error(err));
+    }
   };
 
   return (
@@ -26,18 +36,18 @@ const SignInScreen = () => {
       <SafeAreaView>
         <TextInput
           style={styles.input}
-          onChangeText={setUsername}
-          value={username}
-          placeholder='Enter username'
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Enter email"
         />
         <TextInput
           style={styles.input}
           onChangeText={setPassword}
           value={password}
-          placeholder='Enter password'
+          placeholder="Enter password"
           secureTextEntry={true}
         />
-        <Button mode='contained' onPress={onSignInPressed}>
+        <Button mode="contained" onPress={userLogin}>
           Sign in
         </Button>
         {/* add forgot password oprion */}
