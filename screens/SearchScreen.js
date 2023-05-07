@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, FlatList, Image } from 'react-native';
 import { Button, Searchbar, Text } from 'react-native-paper';
-import { API_URL, API_KEY } from '@env';
+import { API_KEY } from '@env';
 import axios from 'axios';
 import BookDialog from '../components/BookDialog';
 import { useNavigation } from '@react-navigation/native';
@@ -13,13 +13,9 @@ export default function SearchScreen() {
 
   const findBooks = () => {
     axios
-      ///////////////////////////////////
-      // MAKE .ENV FILE WORK AIGAIN!!!!//
-      //////////////////////////////////
-      // .get(
-      //   `https://www.googleapis.com/books/v1/volumes?q=${keyword}:keyes&key=AIzaSyBiyEgG3cyVKmDhjK3Tlt7mJDho4b2wap4`
-      // )
-      .get(`${API_URL}${keyword}:keyes&key=${API_KEY}`)
+      .get(
+        `https://www.googleapis.com/books/v1/volumes?q=${keyword}:keyes&key=${API_KEY}`
+      )
       .then((res) => {
         setResult(res.data.items);
       })
@@ -46,7 +42,7 @@ export default function SearchScreen() {
         }}
       >
         <Searchbar
-          style={{ width: 300, marginTop: 40 }}
+          style={{ width: 300, marginTop: 50 }}
           placeholder="Search"
           onChangeText={(text) => setKeyword(text)}
           value={keyword}
@@ -54,8 +50,16 @@ export default function SearchScreen() {
           onSubmitEditing={findBooks}
         />
       </View>
+      <View>
+        <Button
+          style={{ width: 300, marginBottom: 15 }}
+          mode="contained"
+          onPress={() => navigation.goBack()}
+        >
+          User Profile
+        </Button>
+      </View>
       <View style={{ flex: 5 }}>
-        <Button onPress={() => navigation.goBack()}>User Profile</Button>
         <FlatList
           data={result}
           renderItem={({ item }) => (

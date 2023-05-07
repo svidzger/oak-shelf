@@ -1,8 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert, Image } from 'react-native';
 import { TextInput, Text, Button } from 'react-native-paper';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import { database } from '../firebase/firebase';
+import { ref, set } from 'firebase/database';
+import books2 from '../assets/books2.png';
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
@@ -11,14 +18,22 @@ const SignUpScreen = () => {
 
   const navigation = useNavigation();
   const auth = getAuth();
+
+  // Function to register new user with Firebase Authentication
   const registerUser = () => {
     if (email === '' && password === '') {
       Alert.alert('Enter details to signup!');
     } else {
       createUserWithEmailAndPassword(auth, email, password)
         .then((res) => {
-          res.user.updateProfile({
+          updateProfile(auth.currentUser, {
             displayName: username,
+          }).then(() => {
+            // Creates a collection for each user on user creation
+            set(ref(database, 'users/' + auth.currentUser.uid + '/profile'), {
+              username: auth.currentUser.displayName,
+              email: auth.currentUser.email,
+            });
           });
           console.log('User registered successfully!');
           setUsername('');
@@ -32,6 +47,8 @@ const SignUpScreen = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 26 }}>Personal Bookshelf</Text>
+      <Image style={{ width: 200, height: 200 }} source={books2} />
       <Text style={{ fontSize: 18 }}>Create an account</Text>
       <SafeAreaView>
         <TextInput
@@ -53,15 +70,13 @@ const SignUpScreen = () => {
           placeholder="Enter password"
           secureTextEntry={true}
         />
-        <Button mode="contained" onPress={registerUser}>
+        <Button
+          style={{ marginBottom: 10, marginTop: 20 }}
+          mode="contained"
+          onPress={registerUser}
+        >
           Register
         </Button>
-        <Text
-          style={styles.loginText}
-          onPress={() => navigation.navigate('SingIn')}
-        >
-          Already Registered? Click here to login
-        </Text>
         <Button mode="outlined" onPress={() => navigation.goBack()}>
           Back
         </Button>
@@ -72,10 +87,9 @@ const SignUpScreen = () => {
 
 const styles = StyleSheet.create({
   input: {
-    width: 200,
+    width: 250,
     height: 30,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
   },
 });

@@ -1,27 +1,67 @@
 import * as React from 'react';
-import { View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
-import { Button, Dialog, Portal, Text, IconButton } from 'react-native-paper';
+import {
+  View,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {
+  Button,
+  Dialog,
+  Portal,
+  Text,
+  IconButton,
+  useTheme,
+} from 'react-native-paper';
 import { auth, database } from '../firebase/firebase';
 import { set, push, remove, ref, onValue } from 'firebase/database';
 
 const BookDialog = (props) => {
-  const [visible, setVisible] = React.useState(false);
-
+  const [visibleDialog, setVisibleDialog] = React.useState(false);
+  const { colors } = useTheme();
   const showDialog = () => {
-    console.log(props.item.volumeInfo.title);
-    setVisible(true);
+    setVisibleDialog(true);
   };
 
-  const hideDialog = () => setVisible(false);
+  const hideDialog = () => setVisibleDialog(false);
 
   const wantToRead = () => {
     if (auth.currentUser) {
-      push(ref(database, 'books/'), {
-        username: auth.currentUser.displayName,
+      push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
         book: props.item,
+        status: 'wanttoread',
       });
+      setVisibleDialog(false);
+      Alert.alert('Book added to Want to read!');
     } else {
-      Alert.alert('Error');
+      Alert.alert('Somethin went wrong!');
+    }
+  };
+
+  const haveRead = () => {
+    if (auth.currentUser) {
+      push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
+        book: props.item,
+        status: 'read',
+      });
+      setVisibleDialog(false);
+      Alert.alert('Book added to Read!');
+    } else {
+      Alert.alert('Somethin went wrong!');
+    }
+  };
+
+  const reading = () => {
+    if (auth.currentUser) {
+      push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
+        book: props.item,
+        status: 'reading',
+      });
+      setVisibleDialog(false);
+      Alert.alert('Book added to Reading!');
+    } else {
+      Alert.alert('Something went wrong!');
     }
   };
 
@@ -31,7 +71,8 @@ const BookDialog = (props) => {
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#CCD5AE',
+          // backgroundColor: colors.primaryContainer,
+          backgroundColor: colors.surfaceVariant,
           padding: 10,
           height: 100,
           borderTopRightRadius: 50,
@@ -45,11 +86,13 @@ const BookDialog = (props) => {
         </Text>
       </TouchableOpacity>
       <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog visible={visibleDialog} onDismiss={hideDialog}>
           <Dialog.Title>{props.item.volumeInfo.title}</Dialog.Title>
           <View style={{ height: 300 }}>
             <Dialog.ScrollArea>
-              <Text variant="bodyMedium">Book description:</Text>
+              <Text style={{ marginBottom: 10 }} variant="bodyMedium">
+                Book description:
+              </Text>
               <ScrollView
                 pagingEnabled={true}
                 bounces
@@ -66,8 +109,9 @@ const BookDialog = (props) => {
             />
           </Dialog.Content>
           <Dialog.Actions>
+            <Button onPress={haveRead}>Read</Button>
             <Button onPress={wantToRead}>Want to read</Button>
-            <Button onPress={hideDialog}>Done</Button>
+            <Button onPress={reading}>Reading</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
