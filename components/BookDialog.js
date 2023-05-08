@@ -6,16 +6,9 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {
-  Button,
-  Dialog,
-  Portal,
-  Text,
-  IconButton,
-  useTheme,
-} from 'react-native-paper';
+import { Button, Dialog, Portal, Text, useTheme } from 'react-native-paper';
 import { auth, database } from '../firebase/firebase';
-import { set, push, remove, ref, onValue } from 'firebase/database';
+import { push, ref } from 'firebase/database';
 
 const BookDialog = (props) => {
   const [visibleDialog, setVisibleDialog] = React.useState(false);
@@ -31,6 +24,7 @@ const BookDialog = (props) => {
       push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
         book: props.item,
         status: 'wanttoread',
+        rating: 0,
       });
       setVisibleDialog(false);
       Alert.alert('Book added to Want to read!');
@@ -44,6 +38,7 @@ const BookDialog = (props) => {
       push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
         book: props.item,
         status: 'read',
+        rating: 0,
       });
       setVisibleDialog(false);
       Alert.alert('Book added to Read!');
@@ -57,6 +52,7 @@ const BookDialog = (props) => {
       push(ref(database, 'users/' + auth.currentUser.uid + '/books'), {
         book: props.item,
         status: 'reading',
+        rating: 0,
       });
       setVisibleDialog(false);
       Alert.alert('Book added to Reading!');
@@ -71,8 +67,8 @@ const BookDialog = (props) => {
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          // backgroundColor: colors.primaryContainer,
-          backgroundColor: colors.surfaceVariant,
+          // Touchable opasity color
+          // backgroundColor: colors.surfaceVariant,
           padding: 10,
           height: 100,
           borderTopRightRadius: 50,

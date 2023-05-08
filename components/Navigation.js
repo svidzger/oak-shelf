@@ -5,7 +5,7 @@ import UserScreen from '../screens/UserScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
-import HomeScreen from '../screens/HomeScreen';
+import BookScreen from '../screens/BookScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,11 +15,11 @@ const StackNavigation = () => {
       initialRouteName={SignInScreen}
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name='SignIn' component={SignInScreen} />
-      <Stack.Screen name='SignUp' component={SignUpScreen} />
-      <Stack.Screen name='User' component={UserScreen} />
-      <Stack.Screen name='Home' component={HomeScreen} />
-      <Stack.Screen name='Search' component={SearchScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="User" component={UserScreen} />
+      <Stack.Screen name="Book" component={BookScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   );
 };

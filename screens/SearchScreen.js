@@ -66,7 +66,7 @@ export default function SearchScreen() {
             <View
               style={{
                 borderRadius: 50,
-                width: 350,
+                width: 300,
                 alignItems: 'center',
                 flexDirection: 'row',
                 margin: 20,

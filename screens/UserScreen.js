@@ -8,7 +8,6 @@ import { remove, ref, onValue } from 'firebase/database';
 export default function UserScreen() {
   const [books, setBooks] = React.useState([]);
   const [emptyBooks, setEmptyBooks] = React.useState('');
-  const [showBox, setShowBox] = React.useState(true);
 
   const navigation = useNavigation();
 
@@ -44,7 +43,6 @@ export default function UserScreen() {
             remove(
               ref(database, 'users/' + auth.currentUser.uid + '/books/' + key)
             );
-            setShowBox(false);
           },
         },
         {
@@ -115,7 +113,7 @@ export default function UserScreen() {
             <View
               style={{
                 borderRadius: 50,
-                width: 350,
+                width: 300,
                 alignItems: 'center',
                 flexDirection: 'row',
                 margin: 20,
@@ -124,18 +122,45 @@ export default function UserScreen() {
             >
               <Image
                 source={{ uri: item.book.volumeInfo.imageLinks?.thumbnail }}
-                style={{ width: 80, height: 120 }}
+                style={{ width: 90, height: 124 }}
                 on
               />
-              <Text>{item.key}</Text>
-              <IconButton
-                icon="delete"
-                iconColor="red"
-                onPress={() => deleteBook(item.key)}
-                style={{ marginLeft: 10, fontSize: 18, color: '#0000EE' }}
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingLeft: 10,
+                  marginRight: 10,
+                  width: 120,
+                }}
               >
-                Delete
-              </IconButton>
+                {item.book.volumeInfo.title}
+              </Text>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                }}
+              >
+                <IconButton
+                  icon="book-edit"
+                  iconColor="blue"
+                  onPress={() => {
+                    navigation.navigate('Book', {
+                      item: item,
+                    });
+                  }}
+                >
+                  Edit
+                </IconButton>
+                <IconButton
+                  icon="delete"
+                  iconColor="red"
+                  onPress={() => deleteBook(item.key)}
+                  style={{ alignItems: 'flex-start' }}
+                >
+                  Delete
+                </IconButton>
+              </View>
             </View>
           )}
         />
